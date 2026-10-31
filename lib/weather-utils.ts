@@ -125,3 +125,41 @@ export function isToday(dateStr: string): boolean {
   const d = String(now.getDate()).padStart(2, '0');
   return dateStr === `${y}-${m}-${d}`;
 }
+
+export interface ClothingAdvice {
+  emoji: string;
+  label: string;
+  detail: string;
+}
+
+export function getClothingAdvice(temp: number): ClothingAdvice {
+  if (temp >= 28) return { emoji: '👕', label: '半袖', detail: '暑い日です。薄手の服装で過ごしましょう。' };
+  if (temp >= 23) return { emoji: '👕', label: '半袖〜薄手の長袖', detail: '快適な気温です。お好みで。' };
+  if (temp >= 18) return { emoji: '👔', label: '長袖シャツ', detail: 'やや涼しいです。長袖がおすすめ。' };
+  if (temp >= 12) return { emoji: '🧥', label: '上着・ジャケット', detail: '肌寒いです。上着を持参しましょう。' };
+  if (temp >= 6)  return { emoji: '🧥', label: '厚手のコート', detail: '寒いです。暖かい服装で。' };
+  return { emoji: '🧣', label: 'コート・防寒具', detail: '非常に寒いです。完全防寒が必要です。' };
+}
+
+export type UmbrellaLevel = 'none' | 'low' | 'medium' | 'high' | 'unknown';
+
+export interface UmbrellaAdvice {
+  emoji: string;
+  label: string;
+  detail: string;
+  level: UmbrellaLevel;
+}
+
+export function getUmbrellaAdvice(pop: number | null, weatherId: number): UmbrellaAdvice {
+  if (pop === null) {
+    const isRainy = weatherId >= 200 && weatherId < 600;
+    if (isRainy) {
+      return { emoji: '☂️', label: '要注意', detail: '現在の天気から雨の可能性があります', level: 'medium' };
+    }
+    return { emoji: '❓', label: '情報なし', detail: '降水確率データが取得できませんでした', level: 'unknown' };
+  }
+  if (pop >= 70) return { emoji: '☂️', label: '傘が必要', detail: `降水確率 ${pop}%`, level: 'high' };
+  if (pop >= 40) return { emoji: '☔', label: '傘があると安心', detail: `降水確率 ${pop}%`, level: 'medium' };
+  if (pop >= 20) return { emoji: '🌂', label: '折り畳み傘推奨', detail: `降水確率 ${pop}%`, level: 'low' };
+  return { emoji: '☀️', label: '傘は不要', detail: `降水確率 ${pop}%`, level: 'none' };
+}

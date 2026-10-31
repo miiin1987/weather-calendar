@@ -77,3 +77,8 @@ export interface WeatherData {
   current: CurrentWeather;
   forecast: DailyForecast[];
 }
+
+export interface FavoriteCity {
+  name: string;
+  query: string;
+}
